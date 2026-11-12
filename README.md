@@ -25,3 +25,6 @@ claude plugin install instabox --marketplace Shaf2665/instabox-claude
 In the desktop app: click + next to the prompt box, then Plugins, Add marketplace with `Shaf2665/instabox-claude`, then Add plugin.
 
 You are asked to enter your Instabox API keys during install. They stay in your own secure storage; nothing is sent anywhere except api.instabox.sh.
+
+## Is it safe?
+Short version: one small source file, one network host (`api.instabox.sh`), no install scripts or dependencies, keys kept in secure storage. The main risk is that `exec` lets the model run commands in your VMs. See [SECURITY.md](SECURITY.md) for what to check, and [AGENTS.md](AGENTS.md) if you are asking an AI agent to install it for you.
