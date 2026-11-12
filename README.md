@@ -118,6 +118,21 @@ Machines are written **`account/machine`**, using the account name you chose in 
 - `/instabox wake personal/dev-box` and `/instabox sleep personal/dev-box` do the same from the prompt.
 - `/instabox note personal/dev-box "runs the nightly build"` adds a note that shows in the panel and is remembered.
 
+## Use it in every project (global install)
+
+You only install once per computer. After that it is available in every project and session on that computer.
+
+| Tool | How to make it global | Don't do this |
+| --- | --- | --- |
+| **Claude Code plugin** | Choose the **user** scope when the install asks where to install it. Your keys are stored in your user settings, so you enter them once. | Choosing a project-only scope limits it to that one project. |
+| **Codex** | Put the setup in `~/.codex/config.toml` (Windows: `C:\Users\<you>\.codex\config.toml`), exactly as in Step 2B. Keep `INSTABOX_API_KEYS` in your shell profile so every session sees it. | A `.codex/config.toml` inside a project limits it to that project. |
+| **Claude Code via MCP** | Add `--scope user` to the `claude mcp add` command (see the end of this guide). | Leaving the scope off limits it to the current project. |
+
+Things to know:
+- It covers **only the computer you installed it on**. Cloud or remote sessions are separate machines, so install it there too.
+- The **Codex desktop app**, if you open it from the dock or Start menu, may not read your shell profile, so it may not see `INSTABOX_API_KEYS`. If `/mcp` lists `instabox` but calls say no keys are set, start Codex from a terminal instead. (Not tested here.)
+- Installed it with the wrong scope? Claude Code: `/plugin` lets you uninstall it, then install again with the user scope. Codex: edit or move the block in `config.toml`.
+
 ## Adding or changing accounts later
 - **Claude Code:** open `/config`, find the instabox plugin, and edit the keys. It reloads by itself.
 - **Codex:** edit the `INSTABOX_API_KEYS` line (or re-run `setx` on Windows), open a new terminal, restart Codex.
