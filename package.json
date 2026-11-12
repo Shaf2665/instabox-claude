@@ -1,0 +1,11 @@
+{
+  "name": "instabox-claude",
+  "version": "0.2.0",
+  "description": "Manage Instabox VMs across several accounts from an AI agent: MCP server (Codex, Claude Code, others) plus a Claude Code plugin.",
+  "type": "module",
+  "bin": { "instabox-mcp": "mcp/server.mjs" },
+  "files": ["mcp/server.mjs"],
+  "engines": { "node": ">=20" },
+  "license": "MIT",
+  "repository": "github:Shaf2665/instabox-claude"
+}

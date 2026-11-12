@@ -26,5 +26,25 @@ In the desktop app: click + next to the prompt box, then Plugins, Add marketplac
 
 You are asked to enter your Instabox API keys during install. They stay in your own secure storage; nothing is sent anywhere except api.instabox.sh.
 
+## Codex and other MCP clients
+The same four tools are available as a dependency-free stdio MCP server (`mcp/server.mjs`, Node 20+). Clone this repo, then add to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.instabox]
+command = "node"
+args = ["/absolute/path/to/instabox-claude/mcp/server.mjs"]
+env_vars = ["INSTABOX_API_KEYS"]
+tool_timeout_sec = 300
+default_tools_approval_mode = "prompt"
+```
+
+and export your keys in your shell profile (they are never written to the config):
+
+```
+export INSTABOX_API_KEYS="personal=ibk_abc,work=ibk_def"
+```
+
+Restart Codex and run `/mcp` to confirm `instabox` is listed. Any other MCP client can run `node mcp/server.mjs` the same way. Run the tests with `node --test mcp/server.test.mjs`.
+
 ## Is it safe?
 Short version: one small source file, one network host (`api.instabox.sh`), no install scripts or dependencies, keys kept in secure storage. The main risk is that `exec` lets the model run commands in your VMs. See [SECURITY.md](SECURITY.md) for what to check, and [AGENTS.md](AGENTS.md) if you are asking an AI agent to install it for you.

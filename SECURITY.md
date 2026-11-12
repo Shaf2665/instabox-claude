@@ -1,17 +1,17 @@
 # Security and trust
 
-This mod is small (one hooks module, `hooks/register.tsx`, about 300 lines). Read it before installing; the facts below are what to check.
+This repo has two entry points with the same behaviour, both small enough to read before installing: the Claude Code plugin (`hooks/register.tsx`, about 270 lines) and a stdio MCP server for Codex and other agents (`mcp/server.mjs`, about 150 lines, Node standard library only). The facts below are what to check.
 
 ## What it can do
-- Calls **one host only**: `https://api.instabox.sh`, through the host's `$.http.fetch`. Grep for `http.fetch` and `BASE`.
-- Reads your Instabox API keys from its config (marked `sensitive`, so kept in secure storage, never in files) and sends each key only as the `X-API-Key` header to that host.
+- Calls **one host only**: `https://api.instabox.sh` (plugin: through the host's `$.http.fetch`; MCP server: Node's built-in `fetch`). Grep for `BASE`.
+- Reads your Instabox API keys from the plugin's config (marked `sensitive`, so kept in secure storage, never in files) or, for the MCP server, from the `INSTABOX_API_KEYS` environment variable (never from files or arguments) and sends each key only as the `X-API-Key` header to that host.
 - Keeps a cached machine list and your notes in the plugin's own store (`$.store`). No keys are stored there.
 - Registers four tools for the model: `list`, `wake`, `exec`, `sleep`, plus the `/instabox` command and a pane.
 
 ## What it does not do
-- No local file access (`$.fs`), no local processes (`$.process`), no shell, no install scripts, no hooks on other tools' calls or on your prompts.
+- No local file access, no local processes, no shell (the MCP server imports only `node:fs` (one `realpathSync` call on its own path), `node:readline` and `node:url`), no install scripts, no hooks on other tools' calls or on your prompts.
 - No telemetry and no other network destinations.
-- No dependencies: no `package.json`, nothing fetched at install time.
+- No dependencies and no `scripts` in `package.json`: nothing is fetched or run at install time.
 
 ## The real risk: `exec`
 `exec` runs a shell command **inside your Instabox VM** as the model asks. Anything the model can be talked into running can run there. Reduce the exposure:
@@ -21,7 +21,9 @@ This mod is small (one hooks module, `hooks/register.tsx`, about 300 lines). Rea
 
 ## Verify yourself
 ```
-grep -n "http.fetch\|\$.process\|\$.fs\|BASE =" hooks/register.tsx
+grep -n "BASE =\|http.fetch\|\$.process\|\$.fs" hooks/register.tsx mcp/server.mjs
+grep -n "^import" mcp/server.mjs
+node --test mcp/server.test.mjs
 claude plugin validate .
 claude plugin test .
 ```
