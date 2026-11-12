@@ -1,0 +1,15 @@
+{
+  "name": "instabox",
+  "version": "0.2.0",
+  "description": "Track Instabox VMs, wake paused ones and run commands in them on demand, with no standing session.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "api_keys": {
+      "type": "string",
+      "title": "Instabox API keys",
+      "description": "One key per Instabox account/workspace, as label=key pairs separated by commas, e.g. personal=ibk_abc,work=ibk_def. Create each with `instabox keys create --name claude`. Stored in secure storage.",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

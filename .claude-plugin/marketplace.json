@@ -1,0 +1,5 @@
+{
+  "name": "instabox-claude",
+  "owner": { "name": "Shaf2665" },
+  "plugins": [{ "name": "instabox", "source": "./" }]
+}
