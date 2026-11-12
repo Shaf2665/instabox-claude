@@ -33,14 +33,31 @@ An **API key** is like a password that lets this tool act on your Instabox accou
    ```
    npx instabox@latest sh
    ```
-   (This installs the Instabox command-line tool and signs you in. Follow the prompts to sign in.)
-2. Create a key:
+   It asks "Ok to proceed? (y)": type `y`. It then shows a web address and a short code: open the address in your browser, enter the code, and sign in. When it says you are signed in, the Instabox command-line tool is installed.
+
+   > **Seeing "Box limit reached"?** That is normal on the free plan (one machine per account). The installer tried to start a new machine and was told you already have one. You can ignore it, and your signing in still worked. Delete a machine only if you really want to (`instabox rm --yes <name>` erases it and its files).
+2. Create a key. Use the **first** command; it works on every computer:
    ```
-   instabox keys create --name claude
+   npx instabox@latest keys create --name claude
    ```
+   If you have already put `instabox` on your PATH (see the box below), the short form works too: `instabox keys create --name claude`.
 3. It prints something starting with `ibk_`. **Copy it now, it is shown only once.** Keep it private: never paste it into a chat or commit it to GitHub.
 
-Have a second Instabox account? Sign in to *that* account and repeat steps 2-3. Each key only works for its own account.
+> **Windows: "`instabox` is not recognized as the name of a cmdlet, function, script file, or executable program"?**
+> The installer put the tool in a folder that Windows isn't searching yet (the message after "installed at" tells you the folder, usually `C:\Users\<you>\AppData\Local\Programs\instabox`). Fix it any one of these ways:
+> - **Easiest:** keep using `npx instabox@latest ...` as in step 2. No PATH changes needed.
+> - **Use the full path.** Put the folder name in quotes, and start the line with `&` if the path has spaces:
+>   ```
+>   & "C:\Users\<you>\AppData\Local\Programs\instabox\instabox.exe" keys create --name claude
+>   ```
+> - **Add it to PATH for good.** Run this once (the installer prints the same command, with your real folder), then **close PowerShell and open a new window**, since windows that were already open don't see the change:
+>   ```
+>   [Environment]::SetEnvironmentVariable('Path', ([string][Environment]::GetEnvironmentVariable('Path', 'User')).TrimEnd(';') + ';C:\Users\<you>\AppData\Local\Programs\instabox', 'User')
+>   ```
+>   To use it in the current window right away: `$env:Path += ";C:\Users\<you>\AppData\Local\Programs\instabox"`
+>   Then check with `instabox --version`.
+
+Have a second Instabox account? Sign out (`npx instabox@latest logout`), sign in to *that* account (`npx instabox@latest login`), and repeat steps 2-3. Each key only works for its own account.
 
 ### How you'll give the keys to this tool
 Write each account as `name=key`, separated by commas. The **name is anything you like** (it appears in the machine list):
@@ -154,6 +171,8 @@ Things to know:
 | "did not become ready in 3 minutes" | The machine is slow to boot. Ask again, or check it in the Instabox dashboard. |
 | Codex says the tool timed out | Make sure `tool_timeout_sec = 300` is in your config, then restart Codex. |
 | "No Instabox machine ..." | Check the spelling. The message lists the machines it did find. |
+| `instabox` is not recognized (Windows) | The Instabox tool isn't on your PATH. Use `npx instabox@latest ...` instead, or see the Windows box in Step 1. |
+| "Box limit reached" during Step 1 | Harmless on the free plan (one machine). Your sign-in still worked; carry on to the key step. |
 | `instabox` missing from `/mcp` | The path in `args` is wrong or Node isn't installed. Check `node --version`, and that the file exists at that path. |
 
 ## Is it safe?
